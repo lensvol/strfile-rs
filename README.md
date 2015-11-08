@@ -1,4 +1,5 @@
 # strfile-rs 0.1.0
+![crates.io badge](https://img.shields.io/crates/v/strfile.svg) ![TravisCI badge](https://travis-ci.org/lensvol/strfile-rs.svg)
 
 Tiny crate for reading `strfile` headers, which are indexed representations of quote files used in `fortune` utility. 
 

@@ -2,6 +2,11 @@
 name = "strfile"
 version = "0.1.0"
 authors = ["Kirill Borisov <borisov.kir@gmail.com>"]
+license = "MIT"
+keywords = ["strfile", "fortune"]
+readme = "README.md"
+homepage = "https://github.com/lensvol/strfile-rs"
+description = "Tiny package to read strfile headers."
 
 [lib]
 name = "strfile"
