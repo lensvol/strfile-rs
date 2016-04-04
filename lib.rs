@@ -1,5 +1,5 @@
 extern crate byteorder;
 
-pub use strfile::Strfile;
+pub use strfile::{Strfile, Flags};
 
 pub mod strfile;

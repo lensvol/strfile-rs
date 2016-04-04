@@ -1,3 +1,5 @@
+extern crate byteorder;
+
 use std::io::Cursor;
 use std::io::BufReader;
 use std::io::BufRead;
@@ -12,19 +14,30 @@ use byteorder::{BigEndian, ReadBytesExt};
 
 #[derive(Debug)]
 pub struct Strfile {
+    /// Version of the header.
     pub version: u32,
+    /// Number of strings stored in fortune file.
     pub number_of_strings: u32,
+    /// Length of the longest quote. 
     pub longest_length: u32,
+    /// Length of the shortest quote.
     pub shortest_length: u32,
+    /// Bit field for flags.
     pub flags: u32,
+    /// Delimeter used for separating quotes.
     pub delim: u8,
+    /// Byte offsets to beginnings of the strings.
     pub offsets: Vec<u32>,
 }
 
 pub enum Flags {
+    /// Randomized pointers.
     Random = 0x1,
+    /// Strings are ordered in alphabetical order.
     Ordered = 0x2,
+    /// String are "encrypted" using ROT-13.
     Rotated = 0x4,
+    /// String may have comments inside them.
     HasComments = 0x8,
 }
 
@@ -68,24 +81,19 @@ fn read_quote_from_file(reader: &mut BufReader<File>, delim: &u8) -> String {
 }
 
 impl Strfile {
-    fn flag_is_set(&self, mask: Flags) -> bool {
+    /// Check if flag is set.
+    ///
+    /// Examples:
+    ///
+    /// ```
+    /// use strfile::{Strfile, Flags}
+    ///
+    /// pub fn main() {
+    ///     let header = Strfile::new("fortune.dat");
+    ///     println!("ROT13: {}", if header.is_flag_set(Flags::Rotated) { "yes" } else { "no" });
+    /// }
+    pub fn is_flag_set(&self, mask: Flags) -> bool {
         self.flags & (mask as u32) == 1
-    }
-
-    pub fn is_random(&self) -> bool {
-        self.flag_is_set(Flags::Random)
-    }
-
-    pub fn is_rotated(&self) -> bool {
-        self.flag_is_set(Flags::Rotated)
-    }
-
-    pub fn is_ordered(&self) -> bool {
-        self.flag_is_set(Flags::Ordered)
-    }
-
-    pub fn has_comments(&self) -> bool {
-        self.flag_is_set(Flags::HasComments)
     }
 
     pub fn read_quotes(&self, filename: String) -> Result<Vec<String>, Error> {
@@ -96,7 +104,7 @@ impl Strfile {
         for offset in &self.offsets {
             try!(reader.seek(SeekFrom::Start(*offset as u64)));
             let quote = read_quote_from_file(&mut reader, &self.delim);
-            if self.is_rotated() {
+            if self.is_flag_set(Flags::Rotated) {
                 quotes.push(quote.chars().map(rot13).collect::<String>());
             } else {
                 quotes.push(quote);
@@ -105,6 +113,18 @@ impl Strfile {
         Ok(quotes)
     }
 
+    /// Read strfile header contents from a file.
+    ///
+    /// Example usage:
+    ///
+    /// ```
+    /// use strfile::Strfile;
+    ///
+    /// pub fn main() {
+    ///     let header = Strfile::new("fortune.dat");
+    ///     println!("Header contents: {:d}", header);
+    /// }
+    /// ```
     pub fn parse(filename: String) -> Result<Strfile, Error> {
         let mut header_field = [0u8; 21];
 
