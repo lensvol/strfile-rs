@@ -43,8 +43,8 @@ pub enum Flags {
 
 fn rot13(c: char) -> char {
     let base = match c {
-        'a'...'z' => 'a' as u8,
-        'A'...'Z' => 'A' as u8,
+        'a'...'z' => b'a',
+        'A'...'Z' => b'A',
         _ => return c,
     };
 
@@ -69,7 +69,7 @@ fn read_quote_from_file(reader: &mut BufReader<File>, delim: &u8) -> String {
 
     while !found {
         reader.read_line(&mut buffer).unwrap();
-        if buffer.len() > 0 && buffer != separator {
+        if !buffer.is_empty() && buffer != separator {
             quote.push_str(&buffer);
             buffer.clear();
         } else {
