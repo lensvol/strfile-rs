@@ -85,11 +85,11 @@ impl Strfile {
     ///
     /// Examples:
     ///
-    /// ```
-    /// use strfile::{Strfile, Flags}
+    /// ```ignore
+    /// use strfile::{Strfile, Flags};
     ///
-    /// pub fn main() {
-    ///     let header = Strfile::new("fortune.dat");
+    /// fn main() {
+    ///     let header = Strfile::parse("fortune.dat".to_owned()).unwrap();
     ///     println!("ROT13: {}", if header.is_flag_set(Flags::Rotated) { "yes" } else { "no" });
     /// }
     pub fn is_flag_set(&self, mask: Flags) -> bool {
@@ -117,12 +117,12 @@ impl Strfile {
     ///
     /// Example usage:
     ///
-    /// ```
+    /// ```ignore
     /// use strfile::Strfile;
     ///
     /// pub fn main() {
-    ///     let header = Strfile::new("fortune.dat");
-    ///     println!("Header contents: {:d}", header);
+    ///     let header = Strfile::parse("fortune.dat".to_owned()).unwrap():;
+    ///     println!("Header contents: {:?}", header);
     /// }
     /// ```
     pub fn parse(filename: String) -> Result<Strfile, Error> {
