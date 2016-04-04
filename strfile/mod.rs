@@ -18,7 +18,7 @@ pub struct Strfile {
     pub version: u32,
     /// Number of strings stored in fortune file.
     pub number_of_strings: u32,
-    /// Length of the longest quote. 
+    /// Length of the longest quote.
     pub longest_length: u32,
     /// Length of the shortest quote.
     pub shortest_length: u32,
