@@ -13,4 +13,4 @@ name = "strfile"
 path = "lib.rs"
 
 [dependencies]
-byteorder = "0.3.1.3"
+byteorder = "0.3.13"
